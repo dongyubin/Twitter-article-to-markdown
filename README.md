@@ -100,7 +100,7 @@ C:\Users\你的用户名\Desktop\twitter-cli\markdown
 有些 X/Twitter 内容需要登录态才能访问。推荐方式：
 
 1. 用 Chrome 打开 `https://x.com` 并确认已登录。
-2. 安装 Chrome 插件 `Get cookies.txt LOCALLY`。
+2. 安装 Chrome 插件 `Get cookies.txt LOCALLY` [Chrome插件地址](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc)、[Github源码地址](https://github.com/kairi003/Get-cookies.txt-LOCALLY)。
 3. 在 `x.com` 页面导出 Cookie。
 4. 保存为：
 
