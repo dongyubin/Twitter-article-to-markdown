@@ -309,6 +309,11 @@ def write_markdown(data: dict, url: str, root: Path) -> Path:
                     if emoji:
                         lines.extend([f"![]({emoji})", ""])
                         inserted = True
+                elif entity.get("type") == "MARKDOWN":
+                    markdown = entity.get("data", {}).get("markdown", "").strip()
+                    if markdown:
+                        lines.extend([markdown, ""])
+                        inserted = True
             if inserted:
                 continue
 

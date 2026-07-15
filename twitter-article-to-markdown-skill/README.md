@@ -54,6 +54,15 @@ python ".\twitter-article-to-markdown-skill\scripts\twitter_article_to_md.py" --
 python ".\twitter-article-to-markdown-skill\scripts\twitter_article_graphql_to_md.py" "https://x.com/用户名/status/推文ID" --root "$env:USERPROFILE\Desktop\twitter-cli" --save-json
 ```
 
+GraphQL 回退脚本会处理 X Article 里的内嵌 Markdown 实体，包括：
+
+- Markdown 表格
+- fenced code block，例如 bash、json、tsx 代码块
+- X Article 正文图片
+- 原帖互动数据
+
+如果转换后缺少表格或代码块，优先检查 `downloads\<TWEET_ID>_tweetresult.json` 里的 `content_state.entityMap` 是否存在 `type: "MARKDOWN"`。
+
 ## 依赖
 
 ```powershell

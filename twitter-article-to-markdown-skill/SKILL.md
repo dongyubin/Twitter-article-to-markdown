@@ -174,6 +174,8 @@ python ".\twitter-article-to-markdown-skill\scripts\twitter_article_graphql_to_m
 
 GraphQL 回退脚本不会在仓库里保存固定 token。它会优先读取本机环境变量 `X_GUEST_BEARER_TOKEN`，没有设置时再尝试从 X 前端脚本动态发现 guest bearer token。
 
+GraphQL 回退脚本必须保留 X Article 内嵌的 `MARKDOWN` 实体。这类实体通常承载表格和 fenced code block，例如 `bash`、`json`、`tsx`、`text` 代码块。转换完成后，应校验 Markdown 中是否存在原文表格和代码围栏，不要只检查正文段落和图片。
+
 如果已经用 `gallery-dl` 下载过图片，先保存一份媒体元数据，GraphQL 脚本会优先把图片映射成本地 assets 文件：
 
 ```powershell
@@ -187,6 +189,7 @@ python -m gallery_dl -j "<X_OR_TWITTER_URL>" > "$env:USERPROFILE\Desktop\twitter
 - 为每篇文章创建同名 `.assets` 目录。
 - 复制同目录下与文章 ID 相关的图片。
 - 生成带 front matter 的 Markdown。
+- 保留 X Article 中的表格、代码块等内嵌 Markdown 内容。
 
 ### 7. 交付结果
 
@@ -233,6 +236,16 @@ python -m gallery_dl
 ### Markdown 很乱
 
 继续清洗 Markdown：删除按钮文字、导航残留、重复链接和空行，保留标题、作者、正文和图片。必要时根据具体 HTML 结构修改脚本。
+
+### 表格或代码块丢失
+
+X Article 的表格和代码块常被放在 `content_state.entityMap` 的 `MARKDOWN` 实体里，而不是普通段落 block。处理 GraphQL JSON 时必须读取 atomic block 的 entity，并把 `entity["data"]["markdown"]` 原样写入 Markdown。若转换后缺少表格或代码块，检查：
+
+```powershell
+Select-String "$env:USERPROFILE\Desktop\twitter-cli\downloads\<TWEET_ID>_tweetresult.json" -Pattern '"type": "MARKDOWN"'
+```
+
+如果 JSON 中存在 `MARKDOWN` 实体但输出文件没有表格或代码围栏，说明转换脚本存在回归，需要修复 `twitter_article_graphql_to_md.py` 的 atomic entity 处理逻辑。
 
 ## 输出口径
 
